@@ -12,7 +12,6 @@ class sandpile2D:
 		self.boundary = boundary
 		self.z_critical = z_critical
 		self.z = np.zeros((ny, nx))
-		self.last_cluster = np.zeros((ny, nx), dtype=bool)
 
 	def throw_sand(self):
 		
