@@ -68,6 +68,22 @@ class sandpile2D:
 
 		return s, t
 
+class sandpile3D:
+
+	def __init__(self, nx, ny, nz, boundary = 0, z_critical = 4):
+
+		self.nx = nx
+		self.ny = ny
+		self.boundary = boundary
+		self.z_critical = z_critical
+		self.z = np.zeros((ny, nx))
+
+	def throw_sand(self):
+		
+		x = randint(0, self.nx-1)
+		y = randint(0, self.ny-1)
 
 
+		self.z[y,x] = self.z[y,x] + 1
 
+		return self.z[y,x]
