@@ -1,4 +1,6 @@
 import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 from random import randint
 
 # Functions
@@ -11,7 +13,14 @@ class sandpile2D:
 		self.ny = ny
 		self.boundary = boundary
 		self.z_critical = z_critical
-		self.z = np.zeros((ny, nx))
+		self.z = 0*np.ones((ny, nx))
+		self.last_cluster = np.zeros((ny, nx), dtype=bool)
+
+		self.fig = plt.figure()
+		self.ax = self.fig.add_subplot(1,1,1)
+		self.biggest_cluster = 1
+		cplt0 = self.ax.imshow(self.z, interpolation = 'none', cmap = 'Oranges', vmax = 5, vmin = 0)
+		bar = plt.colorbar(cplt0, orientation = 'vertical')
 
 	def throw_sand(self):
 		
@@ -29,10 +38,16 @@ class sandpile2D:
 
 		cluster = np.zeros((self.ny, self.nx), dtype = bool)
 
+		clust_array = []
+		plots = []
+
 		while (np.max(self.z) > self.z_critical):
 
 			avalanche_spots = np.greater(self.z, self.z_critical)
 			cluster = np.logical_or(cluster, avalanche_spots)
+
+			clust_array.append(self.z)
+			print self.z
 
 			s += np.sum(avalanche_spots)
 			t += 1
@@ -65,6 +80,14 @@ class sandpile2D:
 			self.z = self.z + add_sand
 
 		self.last_cluster = cluster
+
+		if (np.sum(self.last_cluster) > self.biggest_cluster):
+			for clust in clust_array:
+				cplt0 = self.ax.imshow(clust.astype(int), interpolation = 'none', cmap = 'Oranges', vmax = 5, vmin = 0)
+				plots.append([cplt0])
+			self.biggest_cluster = np.sum(self.last_cluster)
+			ani = animation.ArtistAnimation(self.fig, plots, interval = 1000, blit = True)
+			ani.save('biggest_cluster.mp4')
 
 		return s, t
 
