@@ -7,7 +7,7 @@ from random import randint
 
 class sandpile2D:
 
-	def __init__(self, nx, ny, boundary = 0, sigma_critical = 4):
+	def __init__(self, nx, ny, slide_rule = 0, boundary = 0, sigma_critical = 4):
 
 		self.nx = nx
 		self.ny = ny
@@ -31,6 +31,35 @@ class sandpile2D:
 
 		return self.sigma[y,x]
 
+	def slide_to_all_directions(self, avalanche_spots):
+
+		# Subtract the avalanche
+		self.sigma[avalanche_spots] = self.sigma[avalanche_spots] - 4
+
+		# Add to the neighbours, one by one
+		# To this, we convert to a matrix of zeros and ones for summing
+		sum_array = avalanche_spots.astype(int)
+
+		# y + 1
+		add_sand = np.roll(sum_array, 1, axis = 0)
+		add_sand[0,:] = np.zeros(self.nx) # avoid the periodicity of roll func
+		self.sigma = self.sigma + add_sand
+
+		# y - 1
+		add_sand = np.roll(sum_array, -1, axis = 0)
+		add_sand[self.ny-1,:] = np.zeros(self.nx) # avoid the periodicity of roll func
+		self.sigma = self.sigma + add_sand
+
+		# x + 1			
+		add_sand = np.roll(sum_array, 1, axis = 1)
+		add_sand[:,0] = np.zeros(self.ny) # avoid the periodicity of roll func
+		self.sigma = self.sigma + add_sand
+
+		# x - 1
+		add_sand = np.roll(sum_array, -1, axis = 1)
+		add_sand[:,self.nx-1] = np.zeros(self.ny) # avoid the periodicity of roll func
+		self.sigma = self.sigma + add_sand
+
 	def avalanche(self):
 
 		t = 0
@@ -51,32 +80,7 @@ class sandpile2D:
 			s += np.sum(avalanche_spots)
 			t += 1
 
-			# Subtract the avalanche
-			self.sigma[avalanche_spots] = self.sigma[avalanche_spots] - 4
-
-			# Add to the neighbours, one by one
-			# To this, we convert to a matrix of zeros and ones for summing
-			sum_array = avalanche_spots.astype(int)
-
-			# y + 1
-			add_sand = np.roll(sum_array, 1, axis = 0)
-			add_sand[0,:] = np.zeros(self.nx) # avoid the periodicity of roll func
-			self.sigma = self.sigma + add_sand
-
-			# y - 1
-			add_sand = np.roll(sum_array, -1, axis = 0)
-			add_sand[self.ny-1,:] = np.zeros(self.nx) # avoid the periodicity of roll func
-			self.sigma = self.sigma + add_sand
-
-			# x + 1			
-			add_sand = np.roll(sum_array, 1, axis = 1)
-			add_sand[:,0] = np.zeros(self.ny) # avoid the periodicity of roll func
-			self.sigma = self.sigma + add_sand
-
-			# x - 1
-			add_sand = np.roll(sum_array, -1, axis = 1)
-			add_sand[:,self.nx-1] = np.zeros(self.ny) # avoid the periodicity of roll func
-			self.sigma = self.sigma + add_sand
+			self.slide_to_all_directions(avalanche_spots)
 
 		self.last_cluster = cluster
 
@@ -93,20 +97,20 @@ class sandpile2D:
 
 class sandpile3D:
 
-	def __init__(self, nx, ny, nz, boundary = 0, z_critical = 4):
+	def __init__(self, nx, ny, nz, boundary = 0, sigma_critical = 4):
 
 		self.nx = nx
 		self.ny = ny
 		self.boundary = boundary
-		self.sigma_critical = z_critical
-		self.sigma = np.zeros((ny, nx))
+		self.sigma_critical = sigma_critical
+		self.sigma = np.zeros((ny, nx, nz))
 
 	def throw_sand(self):
 		
 		x = randint(0, self.nx-1)
 		y = randint(0, self.ny-1)
+		z = randint(0, self.nz-1)
 
+		self.sigma[z,y,x] = self.sigma[z,y,x] + 1
 
-		self.sigma[y,x] = self.sigma[y,x] + 1
-
-		return self.sigma[y,x]
+		return self.sigma[z,y,x]
