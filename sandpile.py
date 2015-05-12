@@ -27,9 +27,12 @@ class sandpile2D:
 		t = 0
 		s = 0
 
+		cluster = np.zeros((self.ny, self.nx), dtype = bool)
+
 		while (np.max(self.z) > self.z_critical):
 
 			avalanche_spots = np.greater(self.z, self.z_critical)
+			cluster = np.logical_or(cluster, avalanche_spots)
 
 			s += np.sum(avalanche_spots)
 			t += 1
@@ -60,6 +63,8 @@ class sandpile2D:
 			add_sand = np.roll(sum_array, -1, axis = 1)
 			add_sand[:,self.nx-1] = np.zeros(self.ny) # avoid the periodicity of roll func
 			self.z = self.z + add_sand
+
+		self.last_cluster = cluster
 
 		return s, t
 
