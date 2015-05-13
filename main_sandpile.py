@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import sandpile
 
-nx = 10
-ny = 10
-grain_number = 1000
+nx = 50
+ny = 50
+grain_number = 50000
 
 pile = sandpile.sandpile2D(nx, ny)
 plt.ion()
