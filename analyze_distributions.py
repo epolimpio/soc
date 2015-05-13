@@ -1,15 +1,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-npfiles = np.load('data/distribution.npz')
+npfiles = np.load('data/dist3D.npz')
 
 s = npfiles['arr_0']
 dist_s = npfiles['arr_1']
 t = npfiles['arr_2']
 dist_t = npfiles['arr_3']
 
-cut_s = np.less_equal(s, 100)
-cut_t = np.less_equal(t, 100)
+cut_s = np.less_equal(s, 50)
+cut_t = np.less_equal(t, 50)
 
 fit_param_s = np.polyfit(np.log(s[cut_s]), np.log(dist_s[cut_s]), 1)
 fit_param_t = np.polyfit(np.log(t[cut_t]), np.log(dist_t[cut_t]), 1)

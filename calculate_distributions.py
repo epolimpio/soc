@@ -2,11 +2,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sandpile
 
-nx = 50
-ny = 50
+nx = 30
+ny = 30
+nz = 25
 grain_number = 100000
+file_out = 'data/dist2D_3030.npz'
 
 pile = sandpile.sandpile2D(nx, ny)
+#pile = sandpile.sandpile3D(nx, ny, nz)
 dist_t = dict()
 dist_s = dict()
 
@@ -14,7 +17,7 @@ n_avalanche = 0
 
 for grain in range(grain_number):
 	
-	if (pile.throw_sand() > pile.z_critical):
+	if (pile.throw_sand() > pile.sigma_critical):
 		n_avalanche += 1
 		s, t = pile.avalanche()
 
@@ -29,10 +32,10 @@ for grain in range(grain_number):
 		else:
 			dist_t[t] = (1.0*s)/t
 
-	if 10*grain % grain_number == 0:
+	if 10*(grain+1) % grain_number == 0:
 		print str(100*grain/grain_number) + '%'
 
-np.savez('data/distribution.npz', np.array(dist_s.keys()), (1.0*np.array(dist_s.values()))/n_avalanche,
+np.savez(file_out, np.array(dist_s.keys()), (1.0*np.array(dist_s.values()))/n_avalanche,
 	np.array(dist_t.keys()), np.array(dist_t.values())/n_avalanche)
 
 fig = plt.figure()
