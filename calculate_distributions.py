@@ -33,7 +33,7 @@ for grain in range(grain_number):
 			dist_t[t] = (1.0*s)/t
 
 	if 10*(grain+1) % grain_number == 0:
-		print str(100*grain/grain_number) + '%'
+		print str(100*(grain+1)/grain_number) + '%'
 
 np.savez(file_out, np.array(dist_s.keys()), (1.0*np.array(dist_s.values()))/n_avalanche,
 	np.array(dist_t.keys()), np.array(dist_t.values())/n_avalanche)

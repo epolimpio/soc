@@ -1,3 +1,4 @@
+import copy
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
@@ -7,7 +8,7 @@ from random import randint
 
 class sandpile2D:
 
-	def __init__(self, nx, ny, slide_rule = 0, boundary = 0, sigma_critical = 4):
+	def __init__(self, nx, ny, slide_rule = 0, boundary = 0, sigma_critical = 3, movie = False):
 
 		self.nx = nx
 		self.ny = ny
@@ -16,11 +17,12 @@ class sandpile2D:
 		self.sigma = 0*np.ones((ny, nx))
 		self.last_cluster = np.zeros((ny, nx), dtype=bool)
 
-		self.fig = plt.figure()
-		self.ax = self.fig.add_subplot(1,1,1)
-		self.biggest_cluster = 1
-		# cplt0 = self.ax.imshow(self.sigma, interpolation = 'none', cmap = 'Oranges', vmax = 5, vmin = 0)
-		# bar = plt.colorbar(cplt0, orientation = 'vertical')
+		self.movie = movie
+
+		if movie:
+			self.fig = plt.figure()
+			self.ax = self.fig.add_subplot(1,1,1)
+			self.biggest_cluster = 1
 
 	def throw_sand(self):
 		
@@ -67,15 +69,19 @@ class sandpile2D:
 
 		cluster = np.zeros((self.ny, self.nx), dtype = bool)
 
-		clust_array = []
-		plots = []
+		if self.movie:
+			clust_array = []
+			plots = []
 
 		while (np.max(self.sigma) > self.sigma_critical):
 
 			avalanche_spots = np.greater(self.sigma, self.sigma_critical)
 			cluster = np.logical_or(cluster, avalanche_spots)
-
-			clust_array.append(self.sigma)
+			
+			if self.movie:
+				algo = copy.copy(self.sigma)
+				algo[avalanche_spots] = algo[avalanche_spots] - 3*self.sigma_critical
+				clust_array.append(-algo)
 
 			s += np.sum(avalanche_spots)
 			t += 1
@@ -83,15 +89,17 @@ class sandpile2D:
 			self.slide_to_all_directions(avalanche_spots)
 
 		self.last_cluster = cluster
+		
+		if self.movie:
+			clust_array.append(-copy.copy(self.sigma))
 
-		# if (np.sum(self.last_cluster) > self.biggest_cluster):
-		# 	for clust in clust_array:
-		# 		cplt0 = self.ax.imshow(clust, interpolation = 'none', cmap = 'Oranges', vmax = 5, vmin = 0)
-		# 		print clust
-		# 		plots.append([cplt0])
-		# 	self.biggest_cluster = np.sum(self.last_cluster)
-		# 	ani = animation.ArtistAnimation(self.fig, plots, interval = 1000, blit = True)
-		# 	ani.save('biggest_cluster.mp4')
+			if (np.sum(self.last_cluster) > self.biggest_cluster):
+				self.biggest_cluster = np.sum(self.last_cluster)
+				for pclust in clust_array:
+					cplt0 = self.ax.imshow(pclust, interpolation = 'none', cmap = 'PuOr', vmax = self.sigma_critical, vmin = -self.sigma_critical)
+					plots.append([cplt0])
+				ani = animation.ArtistAnimation(self.fig, plots, interval = 300, blit = True)
+				ani.save('biggest_cluster.mp4')
 
 		return s, t
 
