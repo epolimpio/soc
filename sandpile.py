@@ -75,13 +75,17 @@ class sandpile2D:
 
 		while (np.max(self.sigma) > self.sigma_critical):
 
-			avalanche_spots = np.greater(self.sigma, self.sigma_critical)
+			# boolean array to se where is more than the critical sigma
+			avalanche_spots = np.greater(self.sigma, self.sigma_critical) 
+			# boolean array with the complete the cluster
 			cluster = np.logical_or(cluster, avalanche_spots)
 			
 			if self.movie:
-				algo = copy.copy(self.sigma)
-				algo[avalanche_spots] = algo[avalanche_spots] - 3*self.sigma_critical
-				clust_array.append(-algo)
+				# save the sigma to later plot it and make a movie
+				sigma_copy = copy.copy(self.sigma)
+				# to point out where the avalanche is and differentiate when plotting
+				sigma_copy[avalanche_spots] = sigma_copy[avalanche_spots] - 3*self.sigma_critical
+				clust_array.append(-sigma_copy)
 
 			s += np.sum(avalanche_spots)
 			t += 1
@@ -95,10 +99,12 @@ class sandpile2D:
 
 			if (np.sum(self.last_cluster) > self.biggest_cluster):
 				self.biggest_cluster = np.sum(self.last_cluster)
+				# plot all the different sigmas and append them to make the movie
 				for pclust in clust_array:
-					cplt0 = self.ax.imshow(pclust, interpolation = 'none', cmap = 'PuOr', vmax = self.sigma_critical, vmin = -self.sigma_critical)
+					cplt0 = self.ax.imshow(pclust, interpolation = 'none', cmap = 'PuOr',
+						vmax = self.sigma_critical, vmin = -self.sigma_critical)
 					plots.append([cplt0])
-				ani = animation.ArtistAnimation(self.fig, plots, interval = 300, blit = True)
+				ani = animation.ArtistAnimation(self.fig, plots, interval = 50, blit = True)
 				ani.save('biggest_cluster.mp4')
 
 		return s, t
