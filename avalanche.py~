@@ -6,7 +6,7 @@ from random import randint
 class avalanche2D:
 
 	def __init__(self, nx, ny, movie = False,
-		calc_slope_rule = 0, boundary = 0, slide_rule = 0, height_rule = 0):
+		calc_slope_rule = 0, boundary = [0,0,0,0], slide_rule = 0, height_rule = 0):
 
 		self.nx = nx
 		self.ny = ny
@@ -23,13 +23,13 @@ class avalanche2D:
 
 		if slide_rule == 0:
 			self.slide_rule = np.array([(1,0),(0,1)])
-			self.slide_boundary = np.array([0,0])
+			self.slide_income = np.array([0,0])
 		elif slide_rule == 1:
 			self.slide_rule = np.array([(1,0),(0,1),(1,1)])
-			self.slide_boundary = np.array([0,0,0])
+			self.slide_income = np.array([0,0,0])
 		elif slide_rule == 2:
 			self.slide_rule = np.array([(1,0),(0,1),(-1,0),(0,-1)])
-			self.slide_boundary = np.array([0,0,self.ny, self.nx])
+			self.slide_income = np.array([0,0,self.ny, self.nx])
 
 		self.sands_to_slide = np.size(self.slide_rule, 0)
 
@@ -65,16 +65,15 @@ class avalanche2D:
 
 		for i in range(self.sands_to_slide):
 
-			add_sand = np.roll(np.roll(sum_array, self.slide_rule[i,1], axis = 0), 
+			add_sand = np.roll(np.roll(sands_to_sum, self.slide_rule[i,1], axis = 0), 
 								self.slide_rule[i,0], axis = 1)
-			if (self.boundary == 0):
-				add_sand[:,self.slide_boundary[i]] = np.zeros(self.ny) if (self.slide_rule[i,1] != 0)
-				add_sand[self.slide_boundary[i],:] = np.zeros(self.nx) if (self.slide_rule[i,0] != 0)
-			else:
 
-			# We should do the boundary here !!!!
+			add_sand[:,self.slide_income[i]] = np.zeros(self.ny) if (self.slide_rule[i,0] != 0)
+			add_sand[self.slide_income[i],:] = np.zeros(self.nx) if (self.slide_rule[i,1] != 0)
 			
 			self.heights = self.heights + add_sand
+
+		if (boundary[1] != 0 and )
 
 
 	def avalanche(self):

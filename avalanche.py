@@ -73,7 +73,7 @@ class avalanche2D:
 			
 			self.heights = self.heights + add_sand
 
-		if (boundary[1] != 0 and )
+		if (boundary[1] != 0 and self.sands_to_slide == 4)
 
 
 	def avalanche(self):
