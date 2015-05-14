@@ -21,7 +21,8 @@ class sandpile2D:
 
 		if movie:
 			self.fig = plt.figure()
-			self.ax = self.fig.add_subplot(1,1,1)
+			self.ax = plt.gca()
+			self.ax.set_axis_off()
 			self.biggest_cluster = 1
 
 	def throw_sand(self):
@@ -102,10 +103,10 @@ class sandpile2D:
 				# plot all the different sigmas and append them to make the movie
 				for pclust in clust_array:
 					cplt0 = self.ax.imshow(pclust, interpolation = 'none', cmap = 'PuOr',
-						vmax = self.sigma_critical, vmin = -self.sigma_critical)
+						vmax = self.sigma_critical, vmin = -self.sigma_critical, aspect = 'auto')
 					plots.append([cplt0])
 				ani = animation.ArtistAnimation(self.fig, plots, interval = 50, blit = True)
-				ani.save('biggest_cluster.mp4')
+				ani.save('biggest_cluster.mp4', codec="libx264", bitrate=-1)
 
 		return s, t
 

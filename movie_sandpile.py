@@ -7,7 +7,7 @@ import sandpile
 
 nx = 50
 ny = 50
-grain_number = 50000
+grain_number = nx*ny*10
 
 pile = sandpile.sandpile2D(nx, ny, movie = False)
 
