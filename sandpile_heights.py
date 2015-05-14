@@ -12,8 +12,11 @@ grain_number = 1000
 
 pile = avalanche.avalanche2D(nx, ny)
 
+sands_out = 0
 for grain in range(grain_number):
+
+	height, slope = pile.throw_sand()
 	
-	if (pile.throw_sand() > pile.sigma_critical):
+	if (height > pile.sigma_critical):
 		pile.avalanche()
 

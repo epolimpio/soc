@@ -50,16 +50,16 @@ class avalanche2D:
 
 		if (self.calc_slope_rule == 0):
 
-			self.slope = 4*self.heights[1:self.ny,1:self.nx] - (self.heights[1:self.ny,2:(self.nx+1)] +
-							self.heights[2:(self.ny+1),1:self.nx] + self.heights[1:self.ny,0:(self.nx-1)] +
-							self.heights[0:(self.ny-1),1:self.nx])
+			slope = 4*self.heights[1:(self.ny+1),1:(self.nx+1)] - (self.heights[1:(self.ny+1),2:(self.nx+2)] +
+							self.heights[2:(self.ny+2),1:(self.nx+1)] + self.heights[1:(self.ny+1),0:self.nx] +
+							self.heights[0:self.ny,1:(self.nx+1)])
 
 		else:
 
-			self.slope = 2*self.heights[1:self.ny,1:self.nx] - (self.heights[1:self.ny,2:(self.nx+1)] +
-							self.heights[2:(self.ny+1),1:self.nx])
+			slope = 2*self.heights[1:(self.ny+1),1:(self.nx+1)] - (self.heights[1:(self.ny+1),2:(self.nx+2)] +
+							self.heights[2:(self.ny+2),1:(self.nx+1)])
 
-		return self.slope
+		return slope
 
 	def throw_sand(self):
 
@@ -67,9 +67,12 @@ class avalanche2D:
 		y = randint(1, self.ny)
 
 		self.heights[y,x] = self.heights[y,x] + 1
-		self.calc_slope()
+		self.slope = self.calc_slope()
 
-		return self.slope[y,x]
+		print self.heights
+		print self.slope
+
+		return self.heights[y,x], self.slope[y-1,x-1]
 
 	def slide_sands(self, avalanche_spots):
 
@@ -109,7 +112,7 @@ class avalanche2D:
 		t = 0
 		s = 0
 
-		cluster = np.zeros((self.ny, self.nx), dtype = bool)
+		cluster = np.zeros((self.ny+2, self.nx+2), dtype = bool)
 
 		if self.movie:
 			clust_array = []
