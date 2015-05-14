@@ -6,7 +6,7 @@ from random import randint
 class avalanche2D:
 
 	def __init__(self, nx, ny, movie = False, sigma_critical = 6,
-		calc_slope_rule = 0, boundary = [0,0,0,0], slide_rule = 0):
+		calc_slope_rule = 0, boundary = [0,0,0,0], slide_rule = 2):
 
 		self.nx = nx
 		self.ny = ny
@@ -76,6 +76,8 @@ class avalanche2D:
 
 	def slide_sands(self, avalanche_spots):
 
+		print avalanche_spots
+
 		self.heights[avalanche_spots] = self.heights[avalanche_spots] - self.sands_to_slide
 		sands_to_sum = avalanche_spots.astype(int)
 
@@ -104,6 +106,7 @@ class avalanche2D:
 			add_sand[self.all_boundaries] = 0
 			
 			self.heights = self.heights + add_sand
+			self.slope = self.calc_slope()
 
 		return sands_out
 
@@ -111,6 +114,7 @@ class avalanche2D:
 
 		t = 0
 		s = 0
+		total_sands_out = 0
 
 		cluster = np.zeros((self.ny+2, self.nx+2), dtype = bool)
 
@@ -128,7 +132,6 @@ class avalanche2D:
 		sum_spots = np.sum(avalanche_spots)
 
 		while (sum_spots > 0):
- 
 			# boolean array with the complete the cluster
 			cluster = np.logical_or(cluster, avalanche_spots)
 			
@@ -142,7 +145,8 @@ class avalanche2D:
 			s += sum_spots
 			t += 1
 
-			self.slide_sands(avalanche_spots)
+			sands_out = self.slide_sands(avalanche_spots)
+			total_sands_out += sands_out
 
 			if critical_height:
 				avalanche_spots = np.greater(self.heights, self.sigma_critical)
@@ -167,7 +171,7 @@ class avalanche2D:
 				ani = animation.ArtistAnimation(self.fig, plots, interval = 50, blit = True)
 				ani.save('biggest_cluster.mp4')
 
-		return s, t
+		return s, t, sands_out
 
 
 
