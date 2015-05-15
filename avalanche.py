@@ -89,7 +89,7 @@ class avalanche2D:
 				in_boundary = self.boundary_bool[j,:,:]
 				if bound_on == 0:
 					sands_out += np.sum(add_sand[in_boundary])
-				else:
+				elif np.sum(add_sand[in_boundary]) > 0:
 					roll_back = np.zeros((self.ny+2, self.nx+2))
 					roll_back[in_boundary] = add_sand[in_boundary]
 					roll_back = np.roll(np.roll(roll_back, -self.slide_rule[i,1], axis = 0), 
@@ -166,7 +166,7 @@ class avalanche2D:
 				ani = animation.ArtistAnimation(self.fig, plots, interval = 50, blit = True)
 				ani.save('biggest_cluster.mp4')
 
-		return s, t, sands_out
+		return s, t, total_sands_out
 
 
 
