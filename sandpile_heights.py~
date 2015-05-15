@@ -18,13 +18,15 @@ def plotting(i, ups, surf):
 
 nx = 50
 ny = 50
-grain_number = 100000
-sigma_critical = 4
+grain_number = 2000000
+sigma_critical = 10
+slide_rule = 2
+calc_slope_rule = 0
 movie = True
 last_plot = True
 
 pile = avalanche.avalanche2D(nx = nx, ny = ny, sigma_critical = sigma_critical, 
-				slide_rule = 0, boundary = [0,0,0,0], calc_slope_rule = 1)
+				slide_rule = slide_rule, boundary = [0,0,0,0], calc_slope_rule = calc_slope_rule)
 
 if (movie or last_plot):
 	#plt.ion()
@@ -40,7 +42,8 @@ for grain in range(grain_number):
 
 	height, slope = pile.throw_sand()
 
-	if (movie and grain%1000 == 0):
+	if (movie and grain%(grain_number/100) == 0):
+		print grain/grain_number*100.0
 		heights_copy = copy.copy(pile.heights)
 		heights_array.append(heights_copy)
 		#ax.clear()
@@ -62,6 +65,7 @@ if last_plot:
 
 if movie:
 	surf = ax.plot_surface(x_data, y_data, heights_array[0], rstride=1, cstride=1,cmap='Oranges',linewidth=0)
-	ani = animation.FuncAnimation(fig, plotting, interval = 100, frames=grain_number/1000,
+	ani = animation.FuncAnimation(fig, plotting, interval = 100, frames=100,
 					fargs = (heights_array[0], surf), blit = False)
-	ani.save('sand_pile_movie.mp4', codec="libx264", bitrate=-1)
+	ani.save('pile_movie_grains{0}_slide{1}_slope{2}.mp4'.format(grain_number,slide_rule,calc_slope_rule),
+			 codec="libx264", bitrate=-1)

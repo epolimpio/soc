@@ -69,14 +69,9 @@ class avalanche2D:
 		self.heights[y,x] = self.heights[y,x] + 1
 		self.slope = self.calc_slope()
 
-		print self.heights
-		print self.slope
-
 		return self.heights[y,x], self.slope[y-1,x-1]
 
 	def slide_sands(self, avalanche_spots):
-
-		print avalanche_spots
 
 		self.heights[avalanche_spots] = self.heights[avalanche_spots] - self.sands_to_slide
 		sands_to_sum = avalanche_spots.astype(int)
