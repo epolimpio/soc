@@ -132,7 +132,7 @@ class avalanche2D:
 			
 			if self.movie:
 				# save the sigma to later plot it and make a movie
-				sigma_copy = copy.copy(self.sigma)
+				sigma_copy = copy.copy(self.heights)
 				# to point out where the avalanche is and differentiate when plotting
 				sigma_copy[avalanche_spots] = sigma_copy[avalanche_spots] - 3*self.sigma_critical
 				clust_array.append(-sigma_copy)
@@ -154,7 +154,7 @@ class avalanche2D:
 		self.last_cluster = cluster
 		
 		if self.movie:
-			clust_array.append(-copy.copy(self.sigma))
+			clust_array.append(-copy.copy(self.heights))
 
 			if (np.sum(self.last_cluster) > self.biggest_cluster):
 				self.biggest_cluster = np.sum(self.last_cluster)

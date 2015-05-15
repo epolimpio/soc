@@ -16,9 +16,9 @@ def plotting(i, ups, surf):
 	print i
 	return surf
 
-nx = 10
-ny = 10
-grain_number = 1000
+nx = 50
+ny = 50
+grain_number = 2000000
 sigma_critical = 10
 slide_rule = 2
 calc_slope_rule = 0
@@ -43,6 +43,7 @@ for grain in range(grain_number):
 	height, slope = pile.throw_sand()
 
 	if (movie and grain%(grain_number/100) == 0):
+		print grain/grain_number*100.0
 		heights_copy = copy.copy(pile.heights)
 		heights_array.append(heights_copy)
 		#ax.clear()
