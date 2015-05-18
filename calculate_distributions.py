@@ -1,3 +1,8 @@
+#!/usr/bin/python
+
+# This calculate the relevant distributions
+# Using the class sandpile.py
+
 import numpy as np
 import matplotlib.pyplot as plt
 import sandpile

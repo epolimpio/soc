@@ -1,5 +1,8 @@
 #!/usr/bin/python
 
+# Makes the sandpile movies based on
+# Kadanoff et al. paper
+
 import copy
 import numpy as np
 import matplotlib.pyplot as plt

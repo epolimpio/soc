@@ -1,3 +1,7 @@
+# Analyze the scaling parameter for several
+# scaling sizes, as described in
+# Kadanoff, L. P., Nagel, S. R., Wu, L. & Zhou, S. M. Scaling and universality in avalanches. Phys. Rev. A 39, 6524–6537 (1989).
+
 import numpy as np
 import matplotlib.pyplot as plt
 

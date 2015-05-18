@@ -1,3 +1,7 @@
+# These classes perform the sandpile algorithm in 2D and 3D
+# Based on the paper: 
+# Bak, P., Tang, C. & Wiesenfeld, K. Self-organized criticality. Physical Review A 38, 364–374 (1988)
+
 import copy
 import numpy as np
 import matplotlib.pyplot as plt

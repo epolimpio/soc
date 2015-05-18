@@ -1,5 +1,8 @@
 #!/usr/bin/python
 
+# Makes the movie of the avalanches
+# Described in Per Bak et al. paper
+
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation

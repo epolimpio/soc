@@ -1,5 +1,8 @@
 #!/usr/bin/python
 
+# This calculate the relevant distributions
+# Using the class avalanche.py
+
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation

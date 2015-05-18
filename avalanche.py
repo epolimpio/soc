@@ -1,3 +1,6 @@
+# This class perform the algorithm described in the paper:
+# Kadanoff, L. P., Nagel, S. R., Wu, L. & Zhou, S. M. Scaling and universality in avalanches. Phys. Rev. A 39, 6524–6537 (1989).
+
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
@@ -7,7 +10,7 @@ class avalanche2D:
 
 	def __init__(self, nx, ny, movie = False, sigma_critical = 6,
 		calc_slope_rule = 0, boundary = [0,0,0,0], slide_rule = 2):
-
+		# Initialize the parameters of the system
 		self.nx = nx
 		self.ny = ny
 
@@ -23,6 +26,8 @@ class avalanche2D:
 
 	def set_slide_rule(self, slide_rule):
 
+		# Here are rule 1a, 1b and 2 of the paper
+
 		if slide_rule == 0:
 			self.slide_rule = np.array([(1,0),(0,1)])
 		elif slide_rule == 1:
@@ -33,6 +38,8 @@ class avalanche2D:
 		self.sands_to_slide = np.size(self.slide_rule, 0)
 
 	def set_boundary_bool(self):
+
+		# Define the booleans to perform operations in the boundary
 
 		self.boundary_bool = np.zeros((4,self.ny+2, self.nx+2), dtype = bool)
 
@@ -47,6 +54,7 @@ class avalanche2D:
 
 	def calc_slope(self):
 
+		# Calculate the slope using the different rules described on table I
 
 		if (self.calc_slope_rule == 0):
 
@@ -80,6 +88,7 @@ class avalanche2D:
 
 		for i in range(self.sands_to_slide):
 
+			# places of avalanche, rolled to the respective neighbour
 			add_sand = np.roll(np.roll(sands_to_sum, self.slide_rule[i,1], axis = 0), 
 								self.slide_rule[i,0], axis = 1)
 			
@@ -88,8 +97,10 @@ class avalanche2D:
 			for bound_on in self.boundary:
 				in_boundary = self.boundary_bool[j,:,:]
 				if bound_on == 0:
+					# If open, count sands dropped
 					sands_out += np.sum(add_sand[in_boundary])
 				elif np.sum(add_sand[in_boundary]) > 0:
+					# If closed, roll back the sands to ariginal position
 					roll_back = np.zeros((self.ny+2, self.nx+2))
 					roll_back[in_boundary] = add_sand[in_boundary]
 					roll_back = np.roll(np.roll(roll_back, -self.slide_rule[i,1], axis = 0), 
@@ -117,7 +128,7 @@ class avalanche2D:
 			clust_array = []
 			plots = []
 
-		# boolean array to se where is more than the critical sigma
+		# boolean array to see where is more than the critical sigma
 		if critical_height:
 			avalanche_spots = np.greater(self.heights, self.sigma_critical)
 		else:
